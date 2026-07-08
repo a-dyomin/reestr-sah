@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#f4f6fb"/>
+  <rect x="100" y="40" width="200" height="200" rx="4" fill="#fff" stroke="#e2e8f3" stroke-width="2"/>
+  <line x1="120" y1="80" x2="280" y2="80" stroke="#e2e8f3" stroke-width="2"/>
+  <line x1="120" y1="110" x2="260" y2="110" stroke="#e2e8f3" stroke-width="2"/>
+  <line x1="120" y1="140" x2="240" y2="140" stroke="#e2e8f3" stroke-width="2"/>
+  <rect x="120" y="170" width="80" height="30" rx="4" fill="#5082E6" opacity="0.5"/>
+  <text x="140" y="260" font-family="Inter,Arial,sans-serif" font-size="14" fill="#233255">:B ?@8Q<0-?5@540G8</text>
+</svg>

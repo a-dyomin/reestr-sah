@@ -1,11 +1,17 @@
 import { useMemo, useState } from 'react'
 import { CATEGORIES, getCategory } from './data/categories'
 import { APPLICATIONS, REGISTRY_ENTRIES } from './data/mockData'
+import { getReportingSummary, REPORTING_PERIODS, TRANSPORT_TRIPS } from './data/mockReportingData'
+import { PHOTO_TYPE_LABELS, TRIP_STATUS_LABELS } from './data/reportingLabels'
 import { REQUIRED_DOCUMENTS } from './data/requiredDocuments'
-import type { RegistryCategory, RegistryEntry } from './types'
+import type { RegistryCategory, RegistryEntry, TransportTrip } from './types'
 import './App.css'
 
-type View = 'dashboard' | RegistryCategory | 'applications' | 'opendata'
+type View = 'dashboard' | RegistryCategory | 'applications' | 'opendata' | 'reporting'
+
+function isRegistryCategoryView(view: View): view is RegistryCategory {
+  return CATEGORIES.some((c) => c.id === view)
+}
 
 const STATUS_LABELS: Record<RegistryEntry['status'], string> = {
   active: 'Включён',
@@ -34,6 +40,9 @@ function Icon({ name }: { name: string }) {
     plus: 'M12 5v14M5 12h14',
     close: 'M18 6L6 18M6 6l12 12',
     info: 'M12 16v-4M12 8h.01',
+    chart: 'M3 3v18h18 M7 16l4-4 4 4 5-6',
+    camera: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+    scale: 'M16 16h6v6M2 16h6v6M12 2v20M2 12h20',
   }
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -46,13 +55,14 @@ function App() {
   const [view, setView] = useState<View>('dashboard')
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<RegistryEntry | null>(null)
+  const [selectedTrip, setSelectedTrip] = useState<TransportTrip | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [formCategory, setFormCategory] = useState<Exclude<RegistryCategory, 'applicants'>>('transport')
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
     let items = REGISTRY_ENTRIES
-    if (view !== 'dashboard' && view !== 'applications' && view !== 'opendata') {
+    if (isRegistryCategoryView(view)) {
       items = items.filter((e) => e.category === view)
     }
     if (!q) return items
@@ -63,6 +73,20 @@ function App() {
         e.ogrn.includes(q),
     )
   }, [view, search])
+
+  const reportingSummary = useMemo(() => getReportingSummary(), [])
+
+  const filteredTrips = useMemo(() => {
+    const q = search.toLowerCase().trim()
+    if (!q) return TRANSPORT_TRIPS
+    return TRANSPORT_TRIPS.filter(
+      (t) =>
+        t.tripNumber.toLowerCase().includes(q) ||
+        t.carrierName.toLowerCase().includes(q) ||
+        t.generatorName.toLowerCase().includes(q) ||
+        t.vehiclePlate.toLowerCase().includes(q),
+    )
+  }, [search])
 
   const stats = useMemo(() => {
     const byCat = (cat: RegistryCategory) =>
@@ -77,6 +101,8 @@ function App() {
     }
   }, [])
 
+  const isRegistryView = isRegistryCategoryView(view)
+
   const pageTitle =
     view === 'dashboard'
       ? 'Главная'
@@ -84,7 +110,9 @@ function App() {
         ? 'Входящие заявления'
         : view === 'opendata'
           ? 'Открытые данные'
-          : getCategory(view).title
+          : view === 'reporting'
+            ? 'Отчётность'
+            : getCategory(view).title
 
   return (
     <div className="app">
@@ -124,6 +152,14 @@ function App() {
           ))}
 
           <div className="nav-section">Администрирование</div>
+          <button
+            type="button"
+            className={`nav-item ${view === 'reporting' ? 'active' : ''}`}
+            onClick={() => setView('reporting')}
+          >
+            <Icon name="chart" />
+            Отчётность
+          </button>
           <button
             type="button"
             className={`nav-item ${view === 'applications' ? 'active' : ''}`}
@@ -172,22 +208,26 @@ function App() {
           </div>
         </header>
 
-        {view !== 'dashboard' && view !== 'applications' && view !== 'opendata' && (
-          <div className="category-banner" style={{ borderColor: getCategory(view).accent }}>
+        {isRegistryView && (
+          <div className="category-banner" style={{ borderColor: getCategory(view as RegistryCategory).accent }}>
             <div>
-              <span className="legal-tag">{getCategory(view).legalBasis}</span>
-              <p>{getCategory(view).description}</p>
+              <span className="legal-tag">{getCategory(view as RegistryCategory).legalBasis}</span>
+              <p>{getCategory(view as RegistryCategory).description}</p>
             </div>
           </div>
         )}
 
-        {(view === 'dashboard' || (view !== 'applications' && view !== 'opendata')) && (
+        {(view === 'dashboard' || isRegistryView || view === 'reporting') && (
           <div className="toolbar">
             <div className="search-box">
               <Icon name="search" />
               <input
                 type="search"
-                placeholder="Поиск по наименованию, населённому пункту, ОГРН..."
+                placeholder={
+                  view === 'reporting'
+                    ? 'Поиск по № рейса, перевозчику, отходообразователю, госномеру...'
+                    : 'Поиск по наименованию, населённому пункту, ОГРН...'
+                }
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -342,10 +382,111 @@ function App() {
             </section>
           )}
 
-          {view !== 'dashboard' && view !== 'applications' && view !== 'opendata' && (
+          {view === 'reporting' && (
+            <>
+              <div className="stats-grid reporting-stats">
+                <div className="stat-card stat-primary">
+                  <Icon name="scale" />
+                  <span className="stat-value">{reportingSummary.totalTonnage}</span>
+                  <span className="stat-label">Тонн за {reportingSummary.monthLabel.toLowerCase()}</span>
+                </div>
+                <div className="stat-card" style={{ '--accent': '#5AD2FF' } as React.CSSProperties}>
+                  <Icon name="truck" />
+                  <span className="stat-value">{reportingSummary.tripCount}</span>
+                  <span className="stat-label">Рейсов за месяц</span>
+                </div>
+                <div className="stat-card" style={{ '--accent': '#FABE00' } as React.CSSProperties}>
+                  <Icon name="camera" />
+                  <span className="stat-value">{reportingSummary.photoCount}</span>
+                  <span className="stat-label">Фотофиксаций</span>
+                </div>
+                <div className="stat-card" style={{ '--accent': '#5082E6' } as React.CSSProperties}>
+                  <Icon name="truck" />
+                  <span className="stat-value">{reportingSummary.inTransit}</span>
+                  <span className="stat-label">В пути сейчас</span>
+                </div>
+              </div>
+
+              <section className="panel">
+                <h2>Тоннаж по месяцам</h2>
+                <div className="tonnage-chart">
+                  {REPORTING_PERIODS.map((p) => (
+                    <div key={p.month} className="tonnage-bar-wrap">
+                      <div
+                        className="tonnage-bar"
+                        style={{ height: `${(p.totalTonnage / 25) * 100}%` }}
+                        title={`${p.totalTonnage} т`}
+                      />
+                      <span className="tonnage-value">{p.totalTonnage} т</span>
+                      <span className="tonnage-label">{p.label.replace(' 2026', '')}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="panel">
+                <div className="panel-header">
+                  <h2>Реестр рейсов</h2>
+                  <span className="result-count">{filteredTrips.length} рейсов</span>
+                </div>
+                <p className="panel-desc">
+                  Учёт транспортирования медотходов: тоннаж, маршрут, фотофиксация погрузки, пломб, разгрузки и актов
+                  приёма-передачи.
+                </p>
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>№ рейса</th>
+                      <th>Дата</th>
+                      <th>Перевозчик</th>
+                      <th>Отходообразователь</th>
+                      <th>Класс</th>
+                      <th>Тоннаж, т</th>
+                      <th>ТС</th>
+                      <th>Фото</th>
+                      <th>Статус</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredTrips.map((trip) => (
+                      <tr key={trip.id} onClick={() => setSelectedTrip(trip)} className="clickable">
+                        <td className="mono">{trip.tripNumber}</td>
+                        <td>{formatDate(trip.date)}</td>
+                        <td className="name-cell">{trip.carrierName}</td>
+                        <td>{trip.generatorName}</td>
+                        <td>
+                          <span className="class-tag">{trip.wasteClass}</span>
+                        </td>
+                        <td className="tonnage-cell">{trip.tonnage.toFixed(2)}</td>
+                        <td>
+                          <span className="vehicle-cell">
+                            {trip.vehicle}
+                            <span className="plate">{trip.vehiclePlate}</span>
+                          </span>
+                        </td>
+                        <td>
+                          <span className="photo-count">
+                            <Icon name="camera" />
+                            {trip.photos.length}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`badge badge-trip-${trip.status}`}>
+                            {TRIP_STATUS_LABELS[trip.status]}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </section>
+            </>
+          )}
+
+          {isRegistryView && (
             <section className="panel">
               <div className="panel-header">
-                <h2>{getCategory(view).title}</h2>
+                <h2>{getCategory(view as RegistryCategory).title}</h2>
                 <span className="result-count">{filtered.length} записей</span>
               </div>
               <table className="data-table">
@@ -393,6 +534,54 @@ function App() {
           </span>
         </footer>
       </div>
+
+      {selectedTrip && (
+        <div className="modal-overlay" onClick={() => setSelectedTrip(null)} role="presentation">
+          <div className="modal modal-lg" onClick={(e) => e.stopPropagation()} role="dialog">
+            <div className="modal-header">
+              <div>
+                <h2>Рейс {selectedTrip.tripNumber}</h2>
+                <p className="modal-subtitle">
+                  {formatDate(selectedTrip.date)} · {TRIP_STATUS_LABELS[selectedTrip.status]}
+                </p>
+              </div>
+              <button type="button" className="icon-btn" onClick={() => setSelectedTrip(null)} aria-label="Закрыть">
+                <Icon name="close" />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="detail-grid">
+                <Detail label="Перевозчик" value={selectedTrip.carrierName} />
+                <Detail label="Отходообразователь" value={selectedTrip.generatorName} />
+                <Detail label="Класс отходов" value={selectedTrip.wasteClass} />
+                <Detail label="Тоннаж" value={`${selectedTrip.tonnage.toFixed(2)} т`} />
+                <Detail label="Транспортное средство" value={`${selectedTrip.vehicle}, ${selectedTrip.vehiclePlate}`} />
+                <Detail label="Водитель" value={selectedTrip.driver} />
+                <Detail label="Маршрут" value={`${selectedTrip.routeFrom} → ${selectedTrip.routeTo}`} />
+                <Detail label="Расстояние" value={`${selectedTrip.distanceKm} км`} />
+                {selectedTrip.actNumber && <Detail label="Акт приёма-передачи" value={selectedTrip.actNumber} />}
+                <Detail label="Дата отчётности" value={formatDate(selectedTrip.reportedAt)} />
+              </div>
+
+              <div className="photo-gallery">
+                <h3>Фотофиксация ({selectedTrip.photos.length})</h3>
+                <div className="photo-grid">
+                  {selectedTrip.photos.map((photo) => (
+                    <figure key={photo.id} className="photo-card">
+                      <img src={photo.url} alt={photo.caption} />
+                      <figcaption>
+                        <span className="photo-type">{PHOTO_TYPE_LABELS[photo.type]}</span>
+                        <span className="photo-caption">{photo.caption}</span>
+                        <span className="photo-time">{formatDateTime(photo.takenAt)}</span>
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {selected && (
         <div className="modal-overlay" onClick={() => setSelected(null)} role="presentation">
@@ -534,6 +723,16 @@ function Detail({ label, value }: { label: string; value: string }) {
       <span className="detail-value">{value}</span>
     </div>
   )
+}
+
+function formatDateTime(iso: string) {
+  return new Date(iso).toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 function formatDate(iso: string) {

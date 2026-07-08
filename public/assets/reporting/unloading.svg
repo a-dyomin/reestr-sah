@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#fff8e6"/>
+  <rect x="80" y="60" width="240" height="160" rx="8" fill="#FABE00" opacity="0.25"/>
+  <rect x="120" y="100" width="160" height="80" rx="4" fill="#FABE00"/>
+  <text x="130" y="260" font-family="Inter,Arial,sans-serif" font-size="14" fill="#233255"> 073@C7:0</text>
+</svg>

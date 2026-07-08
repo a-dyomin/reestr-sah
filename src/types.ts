@@ -40,3 +40,45 @@ export interface Application {
   status: 'review' | 'returned' | 'approved' | 'rejected'
   deadline: string
 }
+
+export type TripPhotoType = 'loading' | 'transport' | 'unloading' | 'seals' | 'act'
+
+export interface TripPhoto {
+  id: string
+  url: string
+  caption: string
+  type: TripPhotoType
+  takenAt: string
+}
+
+export type TripStatus = 'completed' | 'in_transit' | 'registered' | 'cancelled'
+
+export interface TransportTrip {
+  id: string
+  tripNumber: string
+  date: string
+  carrierId: string
+  carrierName: string
+  generatorId: string
+  generatorName: string
+  wasteClass: 'Б' | 'В' | 'Г'
+  tonnage: number
+  vehicle: string
+  vehiclePlate: string
+  driver: string
+  routeFrom: string
+  routeTo: string
+  distanceKm: number
+  status: TripStatus
+  actNumber?: string
+  photos: TripPhoto[]
+  reportedAt: string
+}
+
+export interface ReportingPeriod {
+  month: string
+  label: string
+  totalTonnage: number
+  tripCount: number
+  photoCount: number
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#e6f7ee"/>
+  <path d="M60 200h280l-40-80H100l-40 80z" fill="#2D9B4E" opacity="0.4"/>
+  <rect x="120" y="140" width="160" height="60" rx="8" fill="#233255" opacity="0.2"/>
+  <circle cx="140" cy="210" r="20" fill="#233255"/>
+  <circle cx="260" cy="210" r="20" fill="#233255"/>
+  <text x="130" y="260" font-family="Inter,Arial,sans-serif" font-size="14" fill="#233255">"@0=A?>@B8@>20=85</text>
+</svg>

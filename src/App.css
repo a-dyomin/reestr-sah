@@ -817,9 +817,177 @@ select {
   gap: 8px;
 }
 
+/* Reporting */
+.reporting-stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.tonnage-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 200px;
+  padding: 20px 0 0;
+}
+
+.tonnage-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 6px;
+}
+
+.tonnage-bar {
+  width: 100%;
+  max-width: 48px;
+  background: linear-gradient(180deg, var(--cornflower), #3a6bc5);
+  border-radius: 6px 6px 0 0;
+  margin-top: auto;
+  min-height: 8px;
+  transition: height 0.3s;
+}
+
+.tonnage-value {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cornflower);
+}
+
+.tonnage-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.tonnage-cell {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.vehicle-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.vehicle-cell .plate {
+  font-family: 'Consolas', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.photo-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.photo-count svg {
+  width: 14px;
+  height: 14px;
+}
+
+.badge-trip-completed {
+  background: #e6f7ee;
+  color: #1a8a4a;
+}
+
+.badge-trip-in_transit {
+  background: #e8f0fd;
+  color: var(--cornflower);
+}
+
+.badge-trip-registered {
+  background: #fff8e6;
+  color: #b8860b;
+}
+
+.badge-trip-cancelled {
+  background: #fde8e8;
+  color: var(--red);
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.photo-gallery {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.photo-gallery h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.photo-card {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.photo-card img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+  background: var(--bg);
+}
+
+.photo-card figcaption {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.photo-type {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cornflower);
+}
+
+.photo-caption {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.photo-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 @media (max-width: 1200px) {
   .stats-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .reporting-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
   .opendata-grid {
     grid-template-columns: repeat(2, 1fr);
