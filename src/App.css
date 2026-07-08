@@ -952,9 +952,10 @@ select {
 .photo-card img {
   width: 100%;
   aspect-ratio: 4/3;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
-  background: var(--bg);
+  background: linear-gradient(180deg, #f8fafd 0%, #eef3fd 100%);
+  padding: 8px;
 }
 
 .photo-card figcaption {

@@ -1,9 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
-  <rect width="400" height="300" fill="#f4f6fb"/>
-  <rect x="100" y="40" width="200" height="200" rx="4" fill="#fff" stroke="#e2e8f3" stroke-width="2"/>
-  <line x1="120" y1="80" x2="280" y2="80" stroke="#e2e8f3" stroke-width="2"/>
-  <line x1="120" y1="110" x2="260" y2="110" stroke="#e2e8f3" stroke-width="2"/>
-  <line x1="120" y1="140" x2="240" y2="140" stroke="#e2e8f3" stroke-width="2"/>
-  <rect x="120" y="170" width="80" height="30" rx="4" fill="#5082E6" opacity="0.5"/>
-  <text x="140" y="260" font-family="Inter,Arial,sans-serif" font-size="14" fill="#233255">:B ?@8Q<0-?5@540G8</text>
+  <rect width="400" height="300" rx="16" fill="#EEF3FD"/>
+
+  <!-- clipboard -->
+  <rect x="108" y="42" width="184" height="220" rx="18" fill="#fff" stroke="#D5E0F4" stroke-width="4"/>
+  <rect x="168" y="24" width="64" height="34" rx="12" fill="#B7C9EA"/>
+  <circle cx="200" cy="41" r="8" fill="#8FA6D8"/>
+
+  <path d="M136 92h128M136 122h112M136 152h96M136 182h88" stroke="#E2E8F3" stroke-width="6" stroke-linecap="round"/>
+  <rect x="136" y="198" width="72" height="34" rx="10" fill="#5082E6" opacity="0.25"/>
+
+  <!-- stamp -->
+  <circle cx="250" cy="188" r="34" fill="#E62D32" opacity="0.18"/>
+  <circle cx="250" cy="188" r="26" fill="none" stroke="#E62D32" stroke-width="4"/>
+  <text x="250" y="194" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="800" fill="#E62D32">САХ</text>
+
+  <!-- cartoon pen -->
+  <path d="M88 206l42-58 16 12-42 58z" fill="#5082E6"/>
+  <path d="M130 148l10-8 8 10-10 8z" fill="#233255"/>
+  <circle cx="82" cy="214" r="8" fill="#FFD6A8"/>
+
+  <!-- happy document face -->
+  <circle cx="176" cy="72" r="16" fill="#FFD6A8"/>
+  <circle cx="170" cy="70" r="2" fill="#233255"/>
+  <circle cx="182" cy="70" r="2" fill="#233255"/>
+  <path d="M170 78c3 3 9 3 12 0" stroke="#233255" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- signatures -->
+  <path d="M148 214c12-10 20 10 32 0M188 220c10-8 18 8 28 0" stroke="#5082E6" stroke-width="3" stroke-linecap="round"/>
+
+  <rect x="18" y="248" width="210" height="34" rx="17" fill="#5082E6"/>
+  <text x="123" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">Акт приёма-передачи</text>
 </svg>
