@@ -1,101 +1,87 @@
-# Деплой с GitHub на demosah.izhon.ru
+# Деплой на demosah.izhon.ru
 
-## Схема
+## Диагностика вашей ошибки
 
-```
-GitHub (исходники)  →  сборка  →  demosah.izhon.ru (только dist/)
-```
+Сейчас на сервере **index.html правильный**, но папки `assets/` **нет** (или nginx отдаёт index.html вместо JS).
 
-В репозитории хранятся **исходники**. Папка `dist/` в Git не попадает (см. `.gitignore`).
+Проверка: откройте в браузере  
+`https://demosah.izhon.ru/assets/index-DVhUIltk.js`
 
----
-
-## Вариант A: Автодеплой через GitHub Actions (рекомендуется)
-
-При каждом push в `main` GitHub собирает проект и заливает `dist/` на сервер по SSH.
-
-### 1. На сервере
-
-Создайте каталог для сайта:
-
-```bash
-mkdir -p /var/www/demosah.izhon.ru
-```
-
-Убедитесь, что nginx/apache указывает `root` на этот каталог (см. `nginx.conf`).
-
-### 2. SSH-ключ для деплоя
-
-На **своём компьютере**:
-
-```bash
-ssh-keygen -t ed25519 -C "github-deploy-reestr-sah" -f ~/.ssh/reestr-sah-deploy
-```
-
-Публичный ключ добавьте на сервер:
-
-```bash
-ssh-copy-id -i ~/.ssh/reestr-sah-deploy.pub user@your-server
-```
-
-Приватный ключ (`reestr-sah-deploy`, **без** `.pub`) — в GitHub.
-
-### 3. Секреты в GitHub
-
-Репозиторий → **Settings → Secrets and variables → Actions → New repository secret**:
-
-| Secret | Пример |
-|---|---|
-| `DEPLOY_HOST` | `demosah.izhon.ru` или IP сервера |
-| `DEPLOY_USER` | `deploy` или ваш SSH-пользователь |
-| `DEPLOY_SSH_KEY` | содержимое приватного ключа |
-| `DEPLOY_PATH` | `/var/www/demosah.izhon.ru` |
-
-### 4. Push — и деплой пойдёт сам
-
-```bash
-git push origin main
-```
-
-Статус: **Actions** на GitHub.
+- Если видите **HTML-код** — файла нет, nginx подставляет index.html
+- Должен открыться **JavaScript** (~200 КБ)
 
 ---
 
-## Вариант B: Сборка на сервере (git pull)
+## Решение: деплой из ветки `gh-pages`
 
-Если на сервере есть Node.js:
+GitHub Actions при каждом push в `main`:
+1. Собирает проект (`npm run build`)
+2. Публикует **только dist/** в ветку **`gh-pages`**
+
+На сервере нужно деплоить **ветку `gh-pages`**, а не `main`.
+
+### На сервере (SSH)
 
 ```bash
-# Первичная настройка (один раз)
-git clone https://github.com/a-dyomin/reestr-sah.git /opt/reestr-sah
-chmod +x /opt/reestr-sah/deploy/deploy.sh
+# Если каталог пустой или с неправильной веткой main:
+cd /var/www/demosah.izhon.ru
+rm -rf .git *
+git init
+git remote add origin https://github.com/a-dyomin/reestr-sah.git
+git fetch origin gh-pages
+git checkout -f gh-pages
 
-# Каждый деплой
+# Проверка — должны быть index.html И папка assets/
+ls -la
+ls -la assets/
+```
+
+### Обновление при каждом релизе
+
+```bash
+cd /var/www/demosah.izhon.ru
+git fetch origin gh-pages
+git checkout -f gh-pages
+git reset --hard origin/gh-pages
+```
+
+### В панели хостинга (izhon.ru)
+
+Если есть «Git-деплой»:
+- Репозиторий: `https://github.com/a-dyomin/reestr-sah`
+- **Ветка: `gh-pages`** (не `main`!)
+- Каталог публикации: корень сайта
+
+---
+
+## Nginx
+
+См. `nginx.conf` — для `/assets/` нельзя делать fallback на `index.html`.
+
+После смены конфига:
+
+```bash
+nginx -t && systemctl reload nginx
+```
+
+---
+
+## Альтернатива: сборка на сервере
+
+```bash
+git clone -b main https://github.com/a-dyomin/reestr-sah.git /opt/reestr-sah
 /opt/reestr-sah/deploy/deploy.sh /var/www/demosah.izhon.ru
-```
-
-Или вручную:
-
-```bash
-cd /opt/reestr-sah
-git pull origin main
-npm ci
-npm run build
-rsync -a --delete dist/ /var/www/demosah.izhon.ru/
 ```
 
 ---
 
 ## Проверка после деплоя
 
-1. Откройте https://demosah.izhon.ru/
-2. Ctrl+U — в HTML должно быть `/assets/index-*.js`, **не** `/src/main.tsx`
+| URL | Ожидание |
+|-----|----------|
+| `/` | Страница реестра |
+| Ctrl+U | `<script src="/assets/index-....js">` |
+| `/assets/index-....js` | JavaScript, не HTML |
+| `/src/main.tsx` | 404 (файла быть не должно) |
 
----
-
-## Локальная проверка перед push
-
-```bash
-npm run deploy:check
-npm run preview
-```
+Очистите кэш браузера: **Ctrl+Shift+R**
