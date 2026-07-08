@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" rx="16" fill="#E8F3FF"/>
+  <circle cx="70" cy="60" r="28" fill="#FFE08A"/>
+  <ellipse cx="330" cy="50" rx="40" ry="18" fill="#fff" opacity="0.8"/>
+  <ellipse cx="360" cy="72" rx="28" ry="14" fill="#fff" opacity="0.7"/>
+
+  <!-- truck -->
+  <rect x="210" y="145" width="130" height="58" rx="14" fill="#5082E6"/>
+  <path d="M180 145h40v58h-18a22 22 0 1 1-44 0H150v-58h30z" fill="#6B9BF0"/>
+  <rect x="196" y="158" width="34" height="24" rx="6" fill="#D9E8FF"/>
+  <circle cx="176" cy="210" r="18" fill="#233255"/>
+  <circle cx="176" cy="210" r="8" fill="#B8C7E6"/>
+  <circle cx="300" cy="210" r="18" fill="#233255"/>
+  <circle cx="300" cy="210" r="8" fill="#B8C7E6"/>
+
+  <!-- containers -->
+  <rect x="88" y="118" width="54" height="68" rx="10" fill="#2D9B4E"/>
+  <rect x="98" y="128" width="34" height="34" rx="6" fill="#7ED39A"/>
+  <path d="M115 142h10M110 150h20" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <rect x="146" y="132" width="48" height="54" rx="10" fill="#FABE00"/>
+  <circle cx="170" cy="156" r="10" fill="#E62D32"/>
+  <path d="M166 156h8M170 152v8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- cartoon worker -->
+  <circle cx="118" cy="92" r="22" fill="#FFD6A8"/>
+  <path d="M96 92c0-18 10-28 22-28s22 10 22 28" fill="#5A3E2B"/>
+  <rect x="92" y="108" width="52" height="44" rx="16" fill="#5082E6"/>
+  <path d="M84 118l16 8M136 118l-16 8" stroke="#FFD6A8" stroke-width="10" stroke-linecap="round"/>
+  <path d="M108 152l10 18M128 152l-10 18" stroke="#233255" stroke-width="8" stroke-linecap="round"/>
+  <path d="M142 126l18-10 10 12-16 12z" fill="#FFD6A8"/>
+  <circle cx="112" cy="90" r="3" fill="#233255"/>
+  <circle cx="124" cy="90" r="3" fill="#233255"/>
+  <path d="M112 98c4 4 12 4 16 0" stroke="#233255" stroke-width="2" stroke-linecap="round"/>
+
+  <rect x="18" y="248" width="140" height="34" rx="17" fill="#5082E6"/>
+  <text x="88" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">Погрузка</text>
+</svg>
