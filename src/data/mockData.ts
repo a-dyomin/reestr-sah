@@ -12,7 +12,7 @@ export const REGISTRY_ENTRIES: RegistryEntry[] = [
     website: 'https://medtrans18.ru',
     ogrn: '1181841000456',
     license: 'Л041-01148-18/00567890',
-    licenseIssuer: 'Управление Роспотребнадзора по УР',
+    licenseIssuer: 'Управление Росприроднадзора по УР',
     sanitaryConclusion: '№ 18.01.02.000.М.000123.03.26',
     sanitaryIssuer: 'Управление Роспотребнадзора по УР',
     status: 'active',

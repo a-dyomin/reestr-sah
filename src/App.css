@@ -735,6 +735,76 @@ select {
   margin-top: 8px;
 }
 
+.form-documents {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: #f8fafd;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-documents h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.form-documents-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.file-field {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  gap: 6px !important;
+}
+
+.file-field-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-weight: 600;
+}
+
+.file-required {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--red);
+  background: #fde8e8;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.file-optional {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.file-field-ref {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.file-field input[type='file'] {
+  font-size: 13px;
+  padding: 6px 0;
+  border: none;
+}
+
 .page-footer {
   padding: 14px 28px;
   border-top: 1px solid var(--border);

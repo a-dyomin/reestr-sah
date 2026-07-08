@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { CATEGORIES, getCategory } from './data/categories'
 import { APPLICATIONS, REGISTRY_ENTRIES } from './data/mockData'
+import { REQUIRED_DOCUMENTS } from './data/requiredDocuments'
 import type { RegistryCategory, RegistryEntry } from './types'
 import './App.css'
 
@@ -46,6 +47,7 @@ function App() {
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<RegistryEntry | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [formCategory, setFormCategory] = useState<Exclude<RegistryCategory, 'applicants'>>('transport')
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
@@ -265,14 +267,14 @@ function App() {
             <section className="panel">
               <h2>Входящие заявления</h2>
               <p className="panel-desc">
-                Регламент: проверка в течение 5 рабочих дней, уведомление заявителя в течение 1 рабочего дня после
+                Регламент: проверка в течение 5 рабочих дней, уведомление отходообразователя в течение 1 рабочего дня после
                 размещения.
               </p>
               <table className="data-table">
                 <thead>
                   <tr>
                     <th>№</th>
-                    <th>Заявитель</th>
+                    <th>Отходообразователь / организация</th>
                     <th>Раздел</th>
                     <th>Подано</th>
                     <th>Срок рассмотрения</th>
@@ -448,7 +450,10 @@ function App() {
               <form className="application-form" onSubmit={(e) => e.preventDefault()}>
                 <label>
                   Раздел реестра
-                  <select defaultValue="transport">
+                  <select
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value as Exclude<RegistryCategory, 'applicants'>)}
+                  >
                     {CATEGORIES.filter((c) => c.id !== 'applicants').map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.title}
@@ -482,6 +487,29 @@ function App() {
                   Территория деятельности
                   <input type="text" defaultValue="Удмуртская Республика, г. Ижевск" />
                 </label>
+
+                <div className="form-documents">
+                  <h3>Прилагаемые документы</h3>
+                  <p className="form-documents-note">
+                    Перечень согласно приложению к Правилам (ПП РФ от 28.03.2026 № 339). Форматы: PDF, JPEG, PNG.
+                    Максимальный размер файла — 10 МБ.
+                  </p>
+                  {REQUIRED_DOCUMENTS[formCategory].map((doc) => (
+                    <label key={doc.id} className="file-field">
+                      <span className="file-field-label">
+                        {doc.title}
+                        {doc.required ? (
+                          <span className="file-required">обязательно</span>
+                        ) : (
+                          <span className="file-optional">при наличии</span>
+                        )}
+                      </span>
+                      <span className="file-field-ref">{doc.legalRef}</span>
+                      <input type="file" accept=".pdf,.jpg,.jpeg,.png" required={doc.required} />
+                    </label>
+                  ))}
+                </div>
+
                 <div className="form-actions">
                   <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
                     Отмена
