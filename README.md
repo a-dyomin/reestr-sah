@@ -1,32 +1,48 @@
-# React + TypeScript + Vite
+# Реестр медотходов — Удмуртская Республика
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Прототип регионального реестра операторов медицинских отходов для ООО «САХ» (Спецавтохозяйство).
 
-Currently, two official plugins are available:
+**Основание:** ПП РФ от 28.03.2026 № 339
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Разделы реестра
 
-## React Compiler
+- Заявители
+- Транспортирование
+- Обеззараживание
+- Обезвреживание
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Локальная разработка
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+http://127.0.0.1:5173/
+
+## Production-сборка
+
+```bash
+npm run build
+```
+
+Результат — папка **`dist/`**. Именно её содержимое нужно выкладывать на сервер.
+
+```bash
+npm run preview   # проверка сборки локально
+```
+
+## Деплой на demosah.izhon.ru
+
+**Не заливайте исходники на сервер вручную.** Деплой через Git:
+
+1. Push в GitHub → `main`
+2. GitHub Actions собирает `dist/` и выкладывает на сервер (см. [deploy/README.md](deploy/README.md))
+
+Или на сервере: `git pull && npm ci && npm run build` → содержимое `dist/` в web-root.
+
+Подробная инструкция: **[deploy/README.md](deploy/README.md)**
+
+## Стек
+
+React 19 · TypeScript · Vite 8
